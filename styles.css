@@ -20,82 +20,95 @@
 	color: var(--color-orange, var(--text-accent));
 }
 
-.review-history-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: var(--font-ui-sm);
+
+/* New flex list layout */
+.review-history-list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 }
 
-.review-history-table th,
-.review-history-table td {
+.review-history-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
 	padding: 6px 8px;
-	border-bottom: 1px solid var(--background-modifier-border);
-	vertical-align: top;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	background: var(--background-secondary);
 }
 
-.review-history-table th:nth-child(2),
-.review-history-table td:nth-child(2),
-.review-history-table th:nth-child(3),
-.review-history-table td:nth-child(3) {
-	width: 200px;
+.review-history-item.is-compact {
+	padding: 4px 6px;
+	gap: 8px;
 }
 
-.review-history-row--overdue .review-history-date,
-.review-history-row--overdue .review-history-date-relative {
-	color: var(--text-error);
-}
-
-.review-history-row--missing .review-history-note-title {
-	color: var(--text-muted);
-}
-
-.review-history-note {
+.review-history-item-note {
+	flex: 1 1 auto;
+	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
-	word-break: break-word;
 }
 
-.review-history-note-title {
+.review-history-item-title {
+	font-weight: 600;
 	color: var(--text-normal);
 	text-decoration: none;
 }
 
-.review-history-note-title:hover {
+.review-history-item-title:hover {
 	text-decoration: underline;
 }
 
-.review-history-note-path {
+.review-history-item-path {
 	color: var(--text-muted);
 	font-size: var(--font-ui-sm);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-.review-history-note-missing {
-	color: var(--text-error);
-	font-size: var(--font-ui-sm);
-}
-
-.review-history-date-wrapper {
+.review-history-item-dates {
 	display: flex;
 	flex-direction: column;
+	gap: 4px;
+	width: 120px;
+	flex: 0 0 auto;
+}
+
+.review-history-item.is-compact .review-history-item-dates {
+	width: 100px;
 	gap: 2px;
 }
 
-.review-history-date-wrapper span {
-	white-space: nowrap;
+.review-history-item-date {
+	font-family: var(--font-monospace);
+	font-size: 12px;
+	color: var(--text-normal);
 }
 
-.review-history-date {
-	font-weight: 600;
+.review-history-item.is-overdue .review-history-item-date:first-child {
+	color: var(--text-error);
 }
 
-.review-history-date-relative {
+.review-history-item-missing {
+	color: var(--text-error);
+	font-size: var(--font-ui-sm);
+}
+
+.review-history-item.is-missing .review-history-item-title {
 	color: var(--text-muted);
 }
 
-.review-history-date-invalid {
-	color: var(--text-error);
+.review-history-item.is-compact .review-history-item-path {
+	display: none;
 }
+
+/* Removed controls & header (unused) */
+.review-history-controls, .review-history-filter-btn, .review-history-compact-btn, .review-history-header { display: none; }
+
+/* Remove old table + date wrappers in new layout */
 
 .review-history-empty,
 .review-history-error {

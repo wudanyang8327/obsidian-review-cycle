@@ -23,6 +23,7 @@ interface HistoryRow extends HistoryEntry {
 }
 
 export class ReviewHistoryView extends ItemView {
+
 	constructor(leaf: WorkspaceLeaf, private readonly plugin: ReviewCyclePlugin) {
 		super(leaf);
 	}
@@ -124,83 +125,47 @@ export class ReviewHistoryView extends ItemView {
 				});
 			}
 
-			const table = content.createEl("table", { cls: "review-history-table" });
-			const headRow = table.createEl("thead").createEl("tr");
-			headRow.createEl("th", { text: "Note" });
-			headRow.createEl("th", { text: "Last review" });
-			headRow.createEl("th", { text: "Next review" });
-
-			const body = table.createEl("tbody");
-
+			const list = content.createDiv({ cls: "review-history-list" });
 			for (const row of rows) {
-				const line = body.createEl("tr", { cls: "review-history-row" });
-				if (row.isOverdue) {
-					line.addClass("review-history-row--overdue");
-				}
-				if (row.isMissing) {
-					line.addClass("review-history-row--missing");
-				}
+				const item = list.createDiv({ cls: "review-history-item" });
+				if (row.isOverdue) item.addClass("is-overdue");
+				if (row.isMissing) item.addClass("is-missing");
+				item.addClass("is-compact");
 
-				const noteCell = line.createEl("td", { cls: "review-history-note" });
+				const note = item.createDiv({ cls: "review-history-item-note" });
+				const truncated = (value: string) => (value.length > 20 ? value.slice(0, 20) + "…" : value);
 				if (!row.isMissing) {
-					const title = noteCell.createEl("a", {
-						text: row.basename,
+					const title = note.createEl("a", {
+						text: truncated(row.basename),
 						href: "#",
-						cls: "review-history-note-title",
+						cls: "review-history-item-title",
 					});
-					title.addEventListener("click", (event) => {
-						event.preventDefault();
+					title.title = row.fullPath;
+					title.addEventListener("click", (e) => {
+						e.preventDefault();
 						this.app.workspace.openLinkText(row.fullPath, "", false);
 					});
-					noteCell.createEl("span", {
-						text: row.fullPath,
-						cls: "review-history-note-path",
-					});
 				} else {
-					noteCell.createEl("span", {
-						text: row.fullPath,
-						cls: "review-history-note-title",
-					});
-					noteCell.createEl("span", {
-						text: "File not found in vault",
-						cls: "review-history-note-missing",
-					});
+					note.createEl("span", { text: truncated(row.basename), cls: "review-history-item-title" });
+					note.createSpan({ text: "(missing)", cls: "review-history-item-missing" });
 				}
 
-				const lastCell = line.createEl("td");
-				const lastWrapper = lastCell.createDiv({ cls: "review-history-date-wrapper" });
+				const dates = item.createDiv({ cls: "review-history-item-dates" });
+				const lastSpan = dates.createSpan({ cls: "review-history-item-date" });
 				if (row.last) {
-					lastWrapper.createSpan({
-						text: row.last.format(REVIEW_DISPLAY_FORMAT),
-						cls: "review-history-date",
-					});
-					lastWrapper.createSpan({
-						text: row.last.from(now),
-						cls: "review-history-date-relative",
-					});
+					lastSpan.textContent = row.last.format("MM-DD HH:mm");
+					lastSpan.title = row.last.format(REVIEW_DISPLAY_FORMAT) + " | " + row.last.from(now);
 				} else {
-					lastWrapper.createSpan({
-						text: "Invalid date",
-						cls: "review-history-date-invalid",
-					});
+					lastSpan.textContent = "-";
+					lastSpan.title = "Invalid date";
 				}
 
-				const nextCell = line.createEl("td");
-				const nextWrapper = nextCell.createDiv({ cls: "review-history-date-wrapper" });
+				const nextSpan = dates.createSpan({ cls: "review-history-item-date" });
 				if (row.nextReview) {
-					nextWrapper.createSpan({
-						text: row.nextReview.format(REVIEW_DISPLAY_FORMAT),
-						cls: "review-history-date",
-					});
-					nextWrapper.createSpan({
-						text: row.nextReview.from(now),
-						cls: "review-history-date-relative",
-					});
+					nextSpan.textContent = row.nextReview.format("MM-DD HH:mm");
+					nextSpan.title = row.nextReview.format(REVIEW_DISPLAY_FORMAT) + " | " + row.nextReview.from(now);
 				} else {
-					nextWrapper.createSpan({
-						text: "-",
-						cls: "review-history-date",
-					});
+					nextSpan.textContent = "-";
 				}
 			}
 		} catch (error) {
