@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "1.5.0",
 	"description": "自动周期性回顾旧笔记，防止重复。",
-	"author": "math tea",
-	"authorUrl": "https://github.com/YOUR_GITHUB",
+	"author": "wudanyang8327",
+	"authorUrl": "https://github.com/wudanyang8327",
 	"isDesktopOnly": false
 }
