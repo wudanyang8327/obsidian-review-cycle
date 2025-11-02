@@ -1,94 +1,62 @@
-# Obsidian Sample Plugin
+# ReviewCycle
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+ReviewCycle 是一款面向 Obsidian 的回顾插件，让你以「间隔重复」的方式持续复习旧笔记并掌握下一次回顾的节奏。
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## 功能亮点
+- 🚀 **一键回顾**：命令面板或侧边栏按钮立即触发每日回顾，一次专注一篇笔记。
+- 🧠 **智能筛选**：根据自定义间隔自动跳过近期复习过的笔记，只打开最需要回顾的目标。
+- 📅 **历史面板**：右侧面板展示全部已跟踪笔记、上次回顾时间、下一次预计时间及逾期状态。
+- 🔄 **自动记录**：每次回顾后写入 `.obsidian/plugins/review-cycle/data.json`，并刷新历史视图。
+- ⚙️ **可配置**：自定义回顾间隔天数，完全掌控节奏。
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## 快速开始
+1. 在 Obsidian 中启用 ReviewCycle 插件。
+2. 通过以下方式之一启动回顾：
+   - 命令面板搜索 `Start Daily Review`；
+   - 点击左侧 Ribbon 上的 ReviewCycle 图标。
+3. 插件会：
+   - 获取 Vault 中的所有 Markdown 笔记并过滤掉近期已回顾的条目；
+  - 随机挑选符合条件的第一篇笔记并在当前窗格中打开；
+   - 记录当前时间作为最新回顾时间，计算下一次回顾日期；
+   - 在历史面板中实时更新结果，并通过通知提示所回顾的笔记标题。
 
-## First time developing plugins?
+## 界面与命令
+- **Commands**
+  - `Start Daily Review`：开始当日回顾。
+  - `Open Review History`：在右侧窗格打开历史数据面板。
+- **Ribbon Icon**
+  - 点击左侧 ReviewCycle 图标可以快速触发 `Start Daily Review`。
+- **Review History Panel**
+  - 展示当前跟踪笔记数量、设置的回顾间隔、逾期与缺失文件统计；
+  - 支持点击笔记标题直接跳转；
+  - “Last review / Next review” 列按精确时间排序，方便识别最新与逾期条目。
 
-Quick starting guide for new plugin devs:
+## 设置
+在 **Settings → Community plugins → ReviewCycle** 中可配置：
+- **Review interval (days)**：两次回顾之间至少间隔的天数，默认 30。
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+设置变更会立即生效，并通过 `this.saveData()` 持久化。
 
-## Releasing new releases
-
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
-
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
-
-## Adding your plugin to the community plugin list
-
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+## 数据存储
+- 路径：`<Vault>/.obsidian/plugins/review-cycle/data.json`
+- 作用：记录每篇笔记最近一次回顾的时间戳（UTC 格式 `YYYY-MM-DDTHH:mm:ss`）。
+- 示例：
 
 ```json
 {
-    "fundingUrl": "https://buymeacoffee.com"
+  "notes/学习计划.md": "2025-10-01T22:30:00",
+  "notes/系统设计.md": "2025-09-14T09:45:12"
 }
 ```
 
-If you have multiple URLs, you can also do:
+删除该文件不会影响插件正常使用，下次回顾时会自动重新生成。
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+## 开发与构建
+- 安装依赖：`npm install`
+- 开发调试（监听模式）：`npm run dev`
+- 生产构建：`npm run build`
 
-## API Documentation
+构建后，把 `main.js`、`manifest.json`（以及可选的 `styles.css`）复制到 `<Vault>/.obsidian/plugins/review-cycle/` 目录即可手动部署。
 
-See https://github.com/obsidianmd/obsidian-api
+## 许可协议
+本插件以 MIT License 发布，欢迎基于此进行二次开发或贡献改进。

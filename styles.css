@@ -1,8 +1,107 @@
-/*
+.review-history-view {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.review-history-summary {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	font-size: var(--font-ui-sm);
+	color: var(--text-muted);
+}
 
-If your plugin does not need CSS, delete this file.
+.review-history-summary-overdue {
+	color: var(--text-error);
+}
 
-*/
+.review-history-summary-warning {
+	color: var(--color-orange, var(--text-accent));
+}
+
+.review-history-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--font-ui-sm);
+}
+
+.review-history-table th,
+.review-history-table td {
+	padding: 6px 8px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	vertical-align: top;
+}
+
+.review-history-table th:nth-child(2),
+.review-history-table td:nth-child(2),
+.review-history-table th:nth-child(3),
+.review-history-table td:nth-child(3) {
+	width: 200px;
+}
+
+.review-history-row--overdue .review-history-date,
+.review-history-row--overdue .review-history-date-relative {
+	color: var(--text-error);
+}
+
+.review-history-row--missing .review-history-note-title {
+	color: var(--text-muted);
+}
+
+.review-history-note {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	word-break: break-word;
+}
+
+.review-history-note-title {
+	color: var(--text-normal);
+	text-decoration: none;
+}
+
+.review-history-note-title:hover {
+	text-decoration: underline;
+}
+
+.review-history-note-path {
+	color: var(--text-muted);
+	font-size: var(--font-ui-sm);
+}
+
+.review-history-note-missing {
+	color: var(--text-error);
+	font-size: var(--font-ui-sm);
+}
+
+.review-history-date-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.review-history-date-wrapper span {
+	white-space: nowrap;
+}
+
+.review-history-date {
+	font-weight: 600;
+}
+
+.review-history-date-relative {
+	color: var(--text-muted);
+}
+
+.review-history-date-invalid {
+	color: var(--text-error);
+}
+
+.review-history-empty,
+.review-history-error {
+	color: var(--text-muted);
+}
+
+.review-cycle-ribbon {
+	cursor: pointer;
+}

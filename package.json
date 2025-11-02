@@ -1,16 +1,23 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "review-cycle",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "ReviewCycle surfaces notes for spaced repetition-style reviews inside Obsidian.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"obsidian",
+		"plugin",
+		"review"
+	],
+	"author": "math tea",
 	"license": "MIT",
+	"dependencies": {
+		"moment": "^2.30.1"
+	},
 	"devDependencies": {
 		"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
