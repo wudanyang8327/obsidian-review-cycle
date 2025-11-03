@@ -210,7 +210,19 @@ export class ReviewHistoryView extends ItemView {
 					title.title = row.fullPath;
 					title.addEventListener("click", (e) => {
 						e.preventDefault();
-						this.app.workspace.openLinkText(row.fullPath, "", false);
+						const isPreview = e.metaKey || e.ctrlKey;
+						this.app.workspace.openLinkText(row.fullPath, "", isPreview);
+					});
+					title.addEventListener("mouseover", (e) => {
+						if (e.metaKey || e.ctrlKey) {
+							this.app.workspace.trigger("hover-link", {
+								event: e,
+								source: VIEW_TYPE_REVIEW_HISTORY,
+								hoverParent: this,
+								targetEl: title,
+								linktext: row.fullPath,
+							});
+						}
 					});
 				} else {
 					note.createEl("span", { text: truncated(row.basename), cls: "review-history-item-title" });

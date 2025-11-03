@@ -70,7 +70,6 @@ export default class ReviewCyclePlugin extends Plugin {
 			const updatedRecord: ReviewRecord = { ...record, [target.path]: today };
 
 			await saveReviewRecord(this, updatedRecord);
-			new Notice(`今日回顾 ${target.basename}。`);
 			this.refreshHistoryViews();
 		} catch (error) {
 			console.error("ReviewCycle: failed to run daily review", error);
