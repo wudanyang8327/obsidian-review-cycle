@@ -29,6 +29,10 @@ export default class ReviewCyclePlugin extends Plugin {
 
 		this.registerView(VIEW_TYPE_REVIEW_HISTORY, (leaf) => new ReviewHistoryView(leaf, this));
 
+		this.app.workspace.onLayoutReady(() => {
+			void this.activateHistoryView();
+		});
+
 		this.addSettingTab(new ReviewCycleSettingTab(this.app, this));
 
 		this.addCommand({

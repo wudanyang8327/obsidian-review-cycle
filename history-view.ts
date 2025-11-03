@@ -2,6 +2,7 @@ import moment, { type Moment } from "moment";
 import { ItemView, type WorkspaceLeaf } from "obsidian";
 import {
 	loadReviewRecord,
+	saveReviewRecord,
 	REVIEW_DISPLAY_FORMAT,
 	REVIEW_PARSE_FORMATS,
 } from "./data";
@@ -23,6 +24,9 @@ interface HistoryRow extends HistoryEntry {
 }
 
 export class ReviewHistoryView extends ItemView {
+	private searchQuery = "";
+	private searchDraft = "";
+	private shouldRefocusSearch = false;
 
 	constructor(leaf: WorkspaceLeaf, private readonly plugin: ReviewCyclePlugin) {
 		super(leaf);
@@ -57,6 +61,43 @@ export class ReviewHistoryView extends ItemView {
 		content.empty();
 		content.createEl("h2", { text: "Review history" });
 
+		const searchBar = content.createDiv({ cls: "review-history-search" });
+		const searchInput = searchBar.createEl("input", {
+			cls: "review-history-search-input",
+			attr: { type: "search", placeholder: "Search notes" },
+		});
+		if (!this.searchDraft) {
+			this.searchDraft = this.searchQuery;
+		}
+		searchInput.value = this.searchDraft;
+		searchInput.addEventListener("input", () => {
+			this.searchDraft = searchInput.value;
+		});
+		searchInput.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				event.preventDefault();
+				this.applySearch();
+			}
+		});
+
+		const searchButton = searchBar.createEl("button", {
+			cls: "review-history-search-button",
+			text: "Search",
+		});
+		searchButton.addEventListener("click", (event) => {
+			event.preventDefault();
+			this.applySearch();
+		});
+
+		if (this.shouldRefocusSearch) {
+			this.shouldRefocusSearch = false;
+			window.setTimeout(() => {
+				searchInput.focus({ preventScroll: true });
+				const len = searchInput.value.length;
+				searchInput.setSelectionRange(len, len);
+			}, 0);
+		}
+
 		try {
 			const record = await loadReviewRecord(this.plugin);
 			const files = this.app.vault.getMarkdownFiles();
@@ -83,7 +124,7 @@ export class ReviewHistoryView extends ItemView {
 				return;
 			}
 
-			const rows: HistoryRow[] = entries
+			const processedRows: HistoryRow[] = entries
 				.map<HistoryRow>((entry) => {
 					const nextReview = entry.last?.clone().add(intervalDays, "days");
 					const nextReviewDay = nextReview?.clone().startOf("day");
@@ -105,12 +146,22 @@ export class ReviewHistoryView extends ItemView {
 					return bValue - aValue;
 				});
 
-			const total = rows.length;
-			const missing = rows.filter((row) => row.isMissing).length;
-			const overdue = rows.filter((row) => row.isOverdue).length;
+			const query = this.searchQuery.toLowerCase();
+			const filteredRows = query
+				? processedRows.filter((row) =>
+					row.fullPath.toLowerCase().includes(query) ||
+					row.basename.toLowerCase().includes(query),
+				)
+				: processedRows;
+
+			const total = processedRows.length;
+			const visible = filteredRows.length;
+			const missing = filteredRows.filter((row) => row.isMissing).length;
+			const overdue = filteredRows.filter((row) => row.isOverdue).length;
 
 			const summary = content.createEl("div", { cls: "review-history-summary" });
-			summary.createEl("span", { text: `Tracked notes: ${total}` });
+			summary.createEl("span", { text: `Tracked: ${total}` });
+			summary.createEl("span", { text: `Showing: ${visible}` });
 			summary.createEl("span", { text: `Interval: ${intervalDays} days` });
 			if (overdue > 0) {
 				summary.createEl("span", {
@@ -125,8 +176,14 @@ export class ReviewHistoryView extends ItemView {
 				});
 			}
 
+			if (filteredRows.length === 0) {
+				const emptyFiltered = content.createEl("p", { text: "No notes match your search." });
+				emptyFiltered.addClass("review-history-empty");
+				return;
+			}
+
 			const list = content.createDiv({ cls: "review-history-list" });
-			for (const row of rows) {
+			for (const row of filteredRows) {
 				const item = list.createDiv({ cls: "review-history-item" });
 				if (row.isOverdue) item.addClass("is-overdue");
 				if (row.isMissing) item.addClass("is-missing");
@@ -167,6 +224,18 @@ export class ReviewHistoryView extends ItemView {
 				} else {
 					nextSpan.textContent = "-";
 				}
+
+				const actions = item.createDiv({ cls: "review-history-item-actions" });
+				const deleteBtn = actions.createEl("button", {
+					cls: "review-history-delete-btn",
+					text: "Remove",
+				});
+				deleteBtn.title = "Remove this note from history";
+				deleteBtn.addEventListener("click", (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					void this.deleteEntry(row.path);
+				});
 			}
 		} catch (error) {
 			console.error("ReviewCycle: failed to render history view", error);
@@ -175,5 +244,25 @@ export class ReviewHistoryView extends ItemView {
 			});
 			message.addClass("review-history-error");
 		}
+	}
+
+	private applySearch(): void {
+		this.searchQuery = this.searchDraft.trim();
+		this.searchDraft = this.searchQuery;
+		this.shouldRefocusSearch = true;
+		void this.refresh();
+	}
+
+	private async deleteEntry(path: string): Promise<void> {
+		try {
+			const record = await loadReviewRecord(this.plugin);
+			if (path in record) {
+				delete record[path];
+				await saveReviewRecord(this.plugin, record);
+			}
+		} catch (error) {
+			console.error("ReviewCycle: failed to delete entry", error);
+		}
+		await this.refresh();
 	}
 }

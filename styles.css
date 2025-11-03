@@ -1,46 +1,119 @@
 .review-history-view {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 16px;
+	padding: var(--size-4-4, 16px) var(--size-4-5, 20px);
+}
+
+.review-history-view h2 {
+	margin: 0;
+	font-size: var(--h3-size, 1.4rem);
+	font-weight: var(--h3-weight, 600);
+	color: var(--text-normal);
 }
 
 .review-history-summary {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 12px;
+	gap: 8px;
+	padding: var(--size-4-2, 8px) var(--size-4-3, 12px);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m, 12px);
+	background: var(--bg-surface, var(--background-secondary));
+	box-shadow: var(--shadow-xs, 0 6px 18px rgba(15, 23, 42, 0.08));
 	font-size: var(--font-ui-sm);
 	color: var(--text-muted);
 }
 
+.review-history-summary span {
+	padding: 4px 10px;
+	border-radius: var(--radius-s, 8px);
+	background: hsla(var(--theme-accent-inactive-h, 220), calc(var(--theme-accent-inactive-s, 20%) * 0.6), calc(var(--theme-accent-inactive-l, 70%) * 1.05), 0.16);
+	color: var(--text-muted);
+}
+
 .review-history-summary-overdue {
-	color: var(--text-error);
+	color: var(--color-red, var(--text-error));
+	background: hsla(var(--color-red-h, 0), 80%, 60%, 0.18);
 }
 
 .review-history-summary-warning {
 	color: var(--color-orange, var(--text-accent));
+	background: hsla(var(--color-orange-h, 32), 90%, 60%, 0.18);
 }
 
+.review-history-search {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: var(--size-4-2, 8px) var(--size-4-3, 12px);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m, 12px);
+	background: var(--bg-surface, var(--background-secondary));
+	box-shadow: var(--shadow-xs, 0 5px 16px rgba(15, 23, 42, 0.06));
+}
 
-/* New flex list layout */
+.review-history-search-input {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: 6px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s, 8px);
+	background: var(--background-primary);
+	color: var(--text-normal);
+	box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.review-history-search-input:focus {
+	outline: none;
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 1px var(--interactive-accent);
+}
+
+.review-history-search-button {
+	flex: 0 0 auto;
+	padding: 6px 16px;
+	border: none;
+	border-radius: var(--radius-s, 8px);
+	background: var(--accent-active, var(--interactive-accent));
+	color: var(--text-on-accent, #fff);
+	cursor: pointer;
+	font-size: var(--font-ui-sm);
+	font-weight: 600;
+	transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+.review-history-search-button:hover {
+	box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+	transform: translateY(-1px);
+}
+
+.review-history-search-button:active {
+	transform: translateY(0);
+	box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
 .review-history-list {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 12px;
 }
 
 .review-history-item {
 	display: flex;
 	align-items: flex-start;
-	gap: 12px;
-	padding: 6px 8px;
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 6px;
-	background: var(--background-secondary);
+	gap: 16px;
+	padding: 12px 16px;
+	border: 1px solid transparent;
+	border-radius: var(--radius-m, 12px);
+	background: var(--bg-editor, var(--background-secondary));
+	box-shadow: var(--shadow-sm, 0 10px 28px rgba(15, 23, 42, 0.12));
+	transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s ease;
 }
 
 .review-history-item.is-compact {
-	padding: 4px 6px;
-	gap: 8px;
+	padding: 10px 14px;
+	gap: 12px;
 }
 
 .review-history-item-note {
@@ -48,17 +121,20 @@
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 4px;
 }
 
 .review-history-item-title {
 	font-weight: 600;
 	color: var(--text-normal);
 	text-decoration: none;
+	letter-spacing: 0.01em;
+	transition: color 0.15s ease;
 }
 
 .review-history-item-title:hover {
 	text-decoration: underline;
+	color: var(--accent-active, var(--interactive-accent));
 }
 
 .review-history-item-path {
@@ -72,24 +148,35 @@
 .review-history-item-dates {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
-	width: 120px;
+	gap: 6px;
+	width: 128px;
 	flex: 0 0 auto;
+	padding: 4px 10px;
+	border-radius: var(--radius-s, 8px);
+	background: hsla(var(--theme-accent-inactive-h, 220), calc(var(--theme-accent-inactive-s, 20%) * 0.5), calc(var(--theme-accent-inactive-l, 70%) * 1.08), 0.12);
 }
 
 .review-history-item.is-compact .review-history-item-dates {
-	width: 100px;
-	gap: 2px;
+	width: 110px;
+	gap: 4px;
+	padding: 4px 8px;
 }
 
 .review-history-item-date {
 	font-family: var(--font-monospace);
 	font-size: 12px;
 	color: var(--text-normal);
+	opacity: 0.9;
 }
 
 .review-history-item.is-overdue .review-history-item-date:first-child {
 	color: var(--text-error);
+}
+
+.review-history-item:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md, 0 14px 36px rgba(15, 23, 42, 0.16));
+	border-color: var(--background-modifier-border-hover, var(--accent-inactive));
 }
 
 .review-history-item-missing {
@@ -105,10 +192,36 @@
 	display: none;
 }
 
-/* Removed controls & header (unused) */
-.review-history-controls, .review-history-filter-btn, .review-history-compact-btn, .review-history-header { display: none; }
+.review-history-item-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-left: auto;
+}
 
-/* Remove old table + date wrappers in new layout */
+.review-history-delete-btn {
+	background: var(--interactive-normal, var(--background-secondary));
+	border: 1px solid transparent;
+	color: var(--text-muted);
+	padding: 4px 10px;
+	border-radius: var(--radius-s, 8px);
+	font-size: 11px;
+	cursor: pointer;
+	transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.review-history-delete-btn:hover {
+	background: hsla(var(--color-red-h, 0), 85%, 60%, 0.14);
+	color: var(--color-red, var(--text-error));
+	border-color: hsla(var(--color-red-h, 0), 75%, 55%, 0.32);
+}
+
+.review-history-controls,
+.review-history-filter-btn,
+.review-history-compact-btn,
+.review-history-header {
+	display: none;
+}
 
 .review-history-empty,
 .review-history-error {
