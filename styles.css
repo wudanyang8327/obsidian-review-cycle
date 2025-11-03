@@ -42,6 +42,11 @@
 	background: hsla(var(--color-orange-h, 32), 90%, 60%, 0.18);
 }
 
+.review-history-summary-today {
+	color: var(--color-green, var(--text-success));
+	background: hsla(var(--color-green-h, 120), 70%, 50%, 0.18);
+}
+
 .review-history-search {
 	display: flex;
 	align-items: center;

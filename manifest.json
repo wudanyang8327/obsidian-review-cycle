@@ -1,7 +1,7 @@
 {
 	"id": "review-cycle",
 	"name": "Review Cycle",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"minAppVersion": "1.5.0",
 	"description": "自动周期性回顾旧笔记，防止重复。",
 	"author": "wudanyang8327",

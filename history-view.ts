@@ -158,11 +158,21 @@ export class ReviewHistoryView extends ItemView {
 			const visible = filteredRows.length;
 			const missing = filteredRows.filter((row) => row.isMissing).length;
 			const overdue = filteredRows.filter((row) => row.isOverdue).length;
+			const reviewedToday = filteredRows.filter((row) => {
+				if (!row.last) return false;
+				return row.last.isSame(today, "day");
+			}).length;
 
 			const summary = content.createEl("div", { cls: "review-history-summary" });
 			summary.createEl("span", { text: `Tracked: ${total}` });
 			summary.createEl("span", { text: `Showing: ${visible}` });
 			summary.createEl("span", { text: `Interval: ${intervalDays} days` });
+			if (reviewedToday > 0) {
+				summary.createEl("span", {
+					text: `Today: ${reviewedToday}`,
+					cls: "review-history-summary-today",
+				});
+			}
 			if (overdue > 0) {
 				summary.createEl("span", {
 					text: `Overdue: ${overdue}`,
