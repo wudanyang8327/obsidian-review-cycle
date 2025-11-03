@@ -154,6 +154,7 @@ export class ReviewHistoryView extends ItemView {
 				)
 				: processedRows;
 
+			const totalFiles = files.length;
 			const total = processedRows.length;
 			const visible = filteredRows.length;
 			const missing = filteredRows.filter((row) => row.isMissing).length;
@@ -164,9 +165,10 @@ export class ReviewHistoryView extends ItemView {
 			}).length;
 
 			const summary = content.createEl("div", { cls: "review-history-summary" });
-			summary.createEl("span", { text: `Tracked: ${total}` });
-			summary.createEl("span", { text: `Showing: ${visible}` });
-			summary.createEl("span", { text: `Interval: ${intervalDays} days` });
+			summary.createEl("span", { text: `All: ${totalFiles}` });
+			summary.createEl("span", { text: `Track: ${total}` });
+			summary.createEl("span", { text: `Show: ${visible}` });
+			summary.createEl("span", { text: `Int: ${intervalDays}d` });
 			if (reviewedToday > 0) {
 				summary.createEl("span", {
 					text: `Today: ${reviewedToday}`,
@@ -175,13 +177,13 @@ export class ReviewHistoryView extends ItemView {
 			}
 			if (overdue > 0) {
 				summary.createEl("span", {
-					text: `Overdue: ${overdue}`,
+					text: `Over: ${overdue}`,
 					cls: "review-history-summary-overdue",
 				});
 			}
 			if (missing > 0) {
 				summary.createEl("span", {
-					text: `Missing files: ${missing}`,
+					text: `Miss: ${missing}`,
 					cls: "review-history-summary-warning",
 				});
 			}
