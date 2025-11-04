@@ -221,6 +221,23 @@
 	border-color: hsla(var(--color-red-h, 0), 75%, 55%, 0.32);
 }
 
+.review-history-read-later-btn {
+	background: var(--interactive-normal, var(--background-secondary));
+	border: 1px solid transparent;
+	color: var(--text-muted);
+	padding: 4px 10px;
+	border-radius: var(--radius-s, 8px);
+	font-size: 11px;
+	cursor: pointer;
+	transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.review-history-read-later-btn:hover {
+	background: hsla(var(--color-blue-h, 220), 85%, 60%, 0.14);
+	color: var(--color-blue, var(--interactive-accent));
+	border-color: hsla(var(--color-blue-h, 220), 75%, 55%, 0.32);
+}
+
 .review-history-controls,
 .review-history-filter-btn,
 .review-history-compact-btn,

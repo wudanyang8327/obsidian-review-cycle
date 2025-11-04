@@ -250,6 +250,20 @@ export class ReviewHistoryView extends ItemView {
 				}
 
 				const actions = item.createDiv({ cls: "review-history-item-actions" });
+				
+				if (!row.isMissing) {
+					const readLaterBtn = actions.createEl("button", {
+						cls: "review-history-read-later-btn",
+						text: "Deep Read",
+					});
+					readLaterBtn.title = "Mark for deep reading";
+					readLaterBtn.addEventListener("click", (event) => {
+						event.preventDefault();
+						event.stopPropagation();
+						void this.markReadLater(row.path);
+					});
+				}
+				
 				const deleteBtn = actions.createEl("button", {
 					cls: "review-history-delete-btn",
 					text: "Remove",
@@ -286,6 +300,23 @@ export class ReviewHistoryView extends ItemView {
 			}
 		} catch (error) {
 			console.error("ReviewCycle: failed to delete entry", error);
+		}
+		await this.refresh();
+	}
+
+	private async markReadLater(path: string): Promise<void> {
+		try {
+			const file = this.app.vault.getAbstractFileByPath(path);
+			if (!file || !(file instanceof this.app.vault.adapter.constructor)) {
+				const tfile = this.app.vault.getMarkdownFiles().find(f => f.path === path);
+				if (tfile) {
+					await this.app.fileManager.processFrontMatter(tfile, (frontmatter) => {
+						frontmatter["deep-read"] = true;
+					});
+				}
+			}
+		} catch (error) {
+			console.error("ReviewCycle: failed to mark deep read", error);
 		}
 		await this.refresh();
 	}
